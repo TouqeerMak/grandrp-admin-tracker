@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1120">
+  <meta name="description" content="Track admin latest replies on Grand RP forum 36 by day, week, month or any selected dates.">
+  <title>Grand RP • Admin Activity Tracker</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+ <div class="app-shell">
+  <header class="topbar">
+    <div class="brand"><div class="brand-mark">G<span>R</span></div><div><strong>GRAND RP</strong><small>FORUM ANALYTICS</small></div></div>
+    <div class="topbar-right"><span class="live-dot" aria-hidden="true"></span> Forum 36 <span class="top-divider"></span><a href="https://gta5grand.com/forum/forums/36/" target="_blank" rel="noopener noreferrer">Visit forum <span aria-hidden="true">↗</span></a></div>
+  </header>
+  <main>
+   <section class="hero">
+    <div><div class="eyebrow"><span class="eyebrow-rule"></span> ADMIN PERFORMANCE</div><h1>Admin activity <em>dashboard.</em></h1><p>See which admins handled the latest forum replies, when they were active, and the threads behind each count.</p></div>
+    <div class="hero-shape" aria-hidden="true"><div class="hero-bars"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+   </section>
+
+   <section class="control-panel" aria-label="Date range and scan">
+    <div class="control-intro"><div class="control-title"><span class="calendar-icon" aria-hidden="true">◷</span><div><strong>Activity period</strong><small>Select the dates you want to count</small></div></div><span class="timezone">London time (GMT/BST)</span></div>
+    <div class="control-row">
+      <label class="input-field period-field"><span>Date range</span><select id="preset"><option value="today">Today</option><option value="yesterday">Yesterday</option><option selected value="week">This week (Mon–Sun)</option><option value="previous-week">Last week</option><option value="last7">Last 7 days</option><option value="month">This month</option><option value="previous-month">Last month</option><option value="last30">Last 30 days</option><option value="custom">Custom dates</option></select></label>
+      <div class="custom-dates hidden" id="customDates">
+        <label class="input-field"><span>From</span><input id="dateFrom" type="date" aria-label="Start date"></label>
+        <label class="input-field"><span>To</span><input id="dateTo" type="date" aria-label="End date"></label>
+      </div>
+      <div class="control-actions"><button id="scanBtn" class="btn btn-primary"><span class="play-icon">▶</span> Start scan</button><button id="stopBtn" class="btn btn-outline hidden">Stop</button></div>
+    </div>
+    <div class="progress-area"><div class="progress-status"><span id="status" aria-live="polite">Ready to scan Grand RP forum</span><span id="statusType" class="status-pill">Not scanned</span></div><div class="progress-track" role="progressbar" aria-label="Scan progress"><div id="progressBar"></div></div></div>
+    <div id="notice" class="notice hidden" role="status"></div>
+   </section>
+
+   <section class="stats" aria-label="Statistics">
+    <article class="stat-card"><div class="stat-top"><span>Threads reviewed</span><span class="stat-icon">▤</span></div><strong id="statScanned">—</strong><small>Unique threads in date range</small></article>
+    <article class="stat-card featured"><div class="stat-top"><span>Admin latest replies</span><span class="stat-icon">↗</span></div><strong id="statCount">—</strong><small>Threads with admin as latest poster</small></article>
+    <article class="stat-card"><div class="stat-top"><span>Active admins</span><span class="stat-icon">♙</span></div><strong id="statAdmins">—</strong><small>Distinct verified accounts</small></article>
+    <article class="stat-card"><div class="stat-top"><span>Forum pages</span><span class="stat-icon">☷</span></div><strong id="statPages">—</strong><small id="scanCoverage">Awaiting scan</small></article>
+   </section>
+
+   <section class="data-panel leaderboard-panel">
+    <div class="panel-head"><div><div class="eyebrow small">RANKINGS</div><h2>Admin leaderboard</h2><p id="resultWindow">Run a scan to view admin totals.</p></div><div class="tools"><label class="searchbox"><span class="sr-only">Search admin name</span><span class="search-icon">⌕</span><input id="adminFilter" placeholder="Search admin..." autocomplete="off"></label><label class="check"><input id="resolvedOnly" type="checkbox"><span>Resolved only</span></label><button class="btn btn-outline btn-small" id="exportBtn" disabled>↓ Export CSV</button></div></div>
+    <div class="table-wrap"><table><thead><tr><th class="rank-col">#</th><th>ADMIN</th><th class="right">THREADS</th><th class="right">SHARE</th><th class="right">DETAILS</th></tr></thead><tbody id="leaders"><tr><td class="empty-cell" colspan="5">No results yet. Start a scan or import a CSV.</td></tr></tbody></table></div>
+   </section>
+
+   <div class="lower-grid">
+    <section class="data-panel chart-panel"><div class="panel-head"><div><div class="eyebrow small">TRENDS</div><h2>Activity over time</h2><p>Latest-reply activity across the selected period.</p></div><label class="input-field group-field"><span>Group by</span><select id="groupBy"><option value="day">Day</option><option value="week">Week</option><option value="month">Month</option></select></label></div><div id="chart" class="chart empty-state">No activity to display yet.</div></section>
+    <section class="data-panel thread-panel"><div class="panel-head"><div><div class="eyebrow small">BREAKDOWN</div><h2 id="threadTitle">Matching threads</h2><p id="threadSubtitle">Select an admin to see their threads.</p></div><button id="clearAdmin" class="text-btn hidden">Clear filter ×</button></div><div id="threads" class="thread-list empty-state">No matching threads yet.</div></section>
+   </div>
+
+   <section class="import-panel"><div class="import-icon">↥</div><div class="import-content"><strong>Forum access blocked?</strong><p>Import an exported CSV from the Chrome extension to review available records here. This does not require the website to contact Grand RP.</p></div><label for="csvFile" class="btn btn-outline import-btn">Import CSV</label><input id="csvFile" class="sr-only" type="file" accept=".csv,text/csv"></section>
+   <footer><p><strong>How counts work:</strong> All date ranges and times use London time (GMT/BST). Each unique thread counts once if its most recent reply is from a verified admin account, dated within your selected period. This is <strong>not</strong> a historical count of every reply or staff action. When a thread receives a newer reply, its attribution may change. Incomplete scans and CSV coverage are labelled.</p><span>Independent community analytics • Not affiliated with Grand RP</span></footer>
+  </main>
+ </div>
+ <script src="/app.js" defer></script>
+</body>
+</html>
